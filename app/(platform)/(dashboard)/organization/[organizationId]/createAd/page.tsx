@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect, ChangeEvent, CSSProperties } from 'react';
 import { useAdStore } from '@/store/useAdStore';
 
 const CreateAdPage = () => {
@@ -32,7 +32,7 @@ const CreateAdPage = () => {
   if (!isMounted) return <div>Loading...</div>;
 
   // Dynamic styling based on adData changes
-  const inputStyle = (value: string) => ({
+  const inputStyle = (value: string): CSSProperties => ({
     border: value ? '1px solid green' : '1px solid red', // Green if field has text, red otherwise
     padding: '10px',
     width: '100%',
@@ -40,10 +40,10 @@ const CreateAdPage = () => {
     marginBottom: '10px'
   });
 
-  const textAreaStyle = {
+  const textAreaStyle: CSSProperties = {
     ...inputStyle(adData.productDescription), // Provide a default value for the text area style
-    minHeight: '150px', // Increase height of text areas
-    resize: 'none'
+    minHeight: '200px', // Increase height of text areas
+    resize: 'none' as 'none' // Explicitly type the resize property
   };
 
   return (
