@@ -1,51 +1,56 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, FormEvent } from 'react';
+import { useRouter, useParams } from 'next/navigation';
+import { Button } from "@/components/ui/button";
+import { useAdStore } from '@/store/useAdStore';  // Import the store
 
 const OrganizationIdPage = () => {
     const [url, setUrl] = useState('');
-    const [adCopy, setAdCopy] = useState('');
-    const [imageUrl, setImageUrl] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
+    const router = useRouter();
+    const { organizationId } = useParams();
+    const setAdData = useAdStore((state) => state.setAdData); // Get the setter from the store
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setError('');
         setLoading(true);
-
-        // Basic URL validation
+      
+        console.log('URL Submitted:', url);
+      
         if (!url || !url.startsWith('http')) {
-            setError('Please enter a valid URL.');
-            setLoading(false);
-            return;
+          setError('Please enter a valid URL.');
+          setLoading(false);
+          return;
         }
-
+      
         try {
-            const response = await fetch('http://localhost:5001/generateAd', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ url })
-            });
+          const response = await fetch('http://localhost:5001/createAd', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ url })
+          });
+      
+          const data = await response.json();
+          console.log('Received Data from Backend:', data);
+          
+          // Set the ad data in the global store
+          setAdData(data);
 
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.message || 'Failed to generate ad');
-            }
-
-            const data = await response.json();
-            setAdCopy(data.adCopy);
-            setImageUrl(data.imageUrl);
+          // Navigate to the createAd page
+          router.push(`/organization/${organizationId}/createAd`);
         } catch (err) {
-            setError(err.message || 'An error occurred while generating the ad.');
+          setError((err as Error).message || 'An error occurred while scraping and generating the ad.');
         } finally {
-            setLoading(false);
+          setLoading(false);
         }
     };
-
+      
     return (
         <div style={{ textAlign: 'center', padding: '20px' }}>
-            <h1>Organization Ad Generator</h1>
+            <h1>Generate AI-Powered Ads</h1>
 
             <form onSubmit={handleSubmit} style={{ marginBottom: '20px' }}>
                 <input
@@ -55,27 +60,12 @@ const OrganizationIdPage = () => {
                     onChange={(e) => setUrl(e.target.value)}
                     style={{ padding: '10px', width: '300px' }}
                 />
-                <button type="submit" style={{ marginLeft: '10px', padding: '10px 20px' }}>
-                    {loading ? 'Generating...' : 'Generate Ads'}
-                </button>
+                <Button variant="primary" style={{ marginLeft: '10px', padding: '10px 20px' }}>
+                    {loading ? 'Processing...' : 'Generate Ads'}
+                </Button>
             </form>
 
             {error && <div style={{ color: 'red' }}>{error}</div>}
-
-            {adCopy && (
-                <div style={{ marginTop: '20px' }}>
-                    <h2>Ad Copy:</h2>
-                    <p>{adCopy}</p>
-                </div>
-            )}
-
-            {/* Uncomment this section if you want to display the generated image */}
-            {/* {imageUrl && (
-                <div style={{ marginTop: '20px' }}>
-                    <h2>Generated Image:</h2>
-                    <img src={`http://localhost:8000/${imageUrl}`} alt="Generated Ad" style={{ maxWidth: '100%', height: 'auto' }} />
-                </div>
-            )} */}
         </div>
     );
 };

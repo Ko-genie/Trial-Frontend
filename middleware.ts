@@ -3,7 +3,7 @@ import { authMiddleware } from "@clerk/nextjs/server";
 import { RedirectToSignIn } from "@clerk/nextjs";
 
 export default authMiddleware({
-  publicRoutes: ['/'],
+  publicRoutes: ['/'],  // Handle dynamic segments with :param syntax
   afterAuth(auth, req) {
     // Ensure that 'auth' is properly initialized
     if (!auth) {
@@ -42,3 +42,14 @@ export default authMiddleware({
 export const config = {
   matcher: ['/((?!.+\\.[\\w]+$|_next).*)', '/', '/(api|trpc)(.*)'],
 };
+
+// import { NextResponse } from "next/server";
+// import { authMiddleware } from "@clerk/nextjs/server";
+
+// export default authMiddleware({
+//   publicRoutes: ['/', '/organization/:organizationId/createAd'],  // Ensure this matches your dynamic route
+// });
+
+// export const config = {
+//   matcher: ['/((?!.+\\.[\\w]+$|_next).*)', '/', '/(api|trpc)(.*)'],
+// };
