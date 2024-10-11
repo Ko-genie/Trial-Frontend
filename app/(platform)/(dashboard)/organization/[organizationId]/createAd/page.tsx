@@ -1,15 +1,15 @@
 "use client";
 
-import React, { useState, useEffect, ChangeEvent, CSSProperties } from 'react';
-import { useAdStore } from '@/store/useAdStore';
+import React, { useState, useEffect, ChangeEvent, CSSProperties } from "react";
+import { useAdStore } from "@/store/useAdStore";
 
 const CreateAdPage = () => {
   const adDataFromStore = useAdStore((state) => state.adData); // Get data from store
   const [adData, setAdData] = useState({
-    brandName: '',
-    productName: '',
-    productDescription: '',
-    adCopy: ''
+    brandName: "",
+    productName: "",
+    productDescription: "",
+    adCopy: "",
   });
   const [isMounted, setIsMounted] = useState(false);
 
@@ -21,74 +21,153 @@ const CreateAdPage = () => {
   }, [adDataFromStore]);
 
   // Handle input changes
-  const handleInputChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleInputChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target;
     setAdData((prevState) => ({
       ...prevState,
-      [name]: value
+      [name]: value,
     }));
   };
 
   if (!isMounted) return <div>Loading...</div>;
 
-  // Dynamic styling based on adData changes
-  const inputStyle = (value: string): CSSProperties => ({
-    border: value ? '1px solid green' : '1px solid red', // Green if field has text, red otherwise
-    padding: '10px',
-    width: '100%',
-    borderRadius: '4px',
-    marginBottom: '10px'
-  });
+  // Dynamic styling for inputs and text areas
+  const inputStyle: CSSProperties = {
+    border: "2px solid #CBD5E1",
+    padding: "12px",
+    width: "100%",
+    borderRadius: "8px",
+    marginBottom: "12px",
+    backgroundColor: "#F8FAFC",
+    fontSize: "16px",
+    color: "#334155",
+    boxShadow: "0 2px 10px rgba(0, 0, 0, 0.1)",
+    transition: "border-color 0.2s ease",
+  };
 
   const textAreaStyle: CSSProperties = {
-    ...inputStyle(adData.productDescription), // Provide a default value for the text area style
-    minHeight: '200px', // Increase height of text areas
-    resize: 'none' as 'none' // Explicitly type the resize property
+    ...inputStyle,
+    minHeight: "220px", // Larger height for text areas
+    resize: "vertical",
   };
 
   return (
-    <div style={{ padding: '20px', maxWidth: '600px', margin: '0 auto' }}>
-      <h1 style={{ fontSize: '24px', marginBottom: '20px', color: '#333' }}>Create Ad for Organization</h1>
-
-      <div>
-        <label style={{ display: 'block', marginBottom: '5px' }}>Brand Name:</label>
+    <div
+      style={{
+        borderRadius: "16px",
+        padding: "30px",
+        maxWidth: "800px",
+        width: "100%",
+        margin: "40px auto",
+        backgroundColor: "#FFFFFF",
+        boxShadow: "0 6px 30px rgba(0, 0, 0, 0.12)",
+        fontFamily: "'Inter', sans-serif",
+        border: "1px solid rgba(0, 0, 0, 0.05)",
+        transition: "box-shadow 0.3s ease, transform 0.3s ease",
+        position: "relative",
+      }}
+      onMouseOver={(e) => {
+        e.currentTarget.style.boxShadow = "0 10px 40px rgba(0, 0, 0, 0.15)";
+        e.currentTarget.style.transform = "translateY(-5px)"; // Lift on hover
+      }}
+      onMouseOut={(e) => {
+        e.currentTarget.style.boxShadow = "0 6px 30px rgba(0, 0, 0, 0.12)";
+        e.currentTarget.style.transform = "translateY(0)";
+      }}
+    >
+      <div style={{ marginBottom: "20px" }}>
+        <label
+          style={{
+            display: "block",
+            fontSize: "16px",
+            // color: "#475569",
+            // color: "rgb(102, 0, 255)",
+            color: "gray",
+            marginBottom: "8px",
+            fontWeight: "600",
+          }}
+        >
+          Brand Name:
+        </label>
         <input
           type="text"
           name="brandName"
+          placeholder="Enter your brand name"
           value={adData.brandName}
           onChange={handleInputChange}
-          style={inputStyle(adData.brandName)}  // Dynamic style
+          style={inputStyle}
         />
       </div>
 
-      <div>
-        <label style={{ display: 'block', marginBottom: '5px' }}>Product Name:</label>
+      <div style={{ marginBottom: "20px" }}>
+        <label
+          style={{
+            display: "block",
+            fontSize: "16px",
+            // color: "#475569",
+            // color: "rgb(102, 0, 255)",
+            color: "gray",
+            marginBottom: "8px",
+            fontWeight: "600",
+          }}
+        >
+          Product Name:
+        </label>
         <input
           type="text"
           name="productName"
+          placeholder="Enter your product name"
           value={adData.productName}
           onChange={handleInputChange}
-          style={inputStyle(adData.productName)}  // Dynamic style
+          style={inputStyle}
         />
       </div>
 
-      <div>
-        <label style={{ display: 'block', marginBottom: '5px' }}>Product Description:</label>
+      <div style={{ marginBottom: "20px" }}>
+        <label
+          style={{
+            display: "block",
+            fontSize: "16px",
+            // color: "#475569",
+            // color: "rgb(102, 0, 255)",
+            color: "gray",
+            marginBottom: "8px",
+            fontWeight: "600",
+          }}
+        >
+          Product Description:
+        </label>
         <textarea
           name="productDescription"
           value={adData.productDescription}
+          placeholder="Describe your product..."
           onChange={handleInputChange}
-          style={{ ...textAreaStyle, minHeight: '200px' }}  // Larger height for Product Description
+          style={textAreaStyle}
         />
       </div>
 
-      <div>
-        <label style={{ display: 'block', marginBottom: '5px' }}>Ad Copy:</label>
+      <div style={{ marginBottom: "20px" }}>
+        <label
+          style={{
+            display: "block",
+            fontSize: "16px",
+            // color: "#475569",
+            // color: "rgb(102, 0, 255)",
+            color: "gray",
+            marginBottom: "8px",
+            fontWeight: "600",
+          }}
+        >
+          Your Ad Copy:
+        </label>
         <textarea
           name="adCopy"
           value={adData.adCopy}
+          placeholder="Edit your ad copy..."
           onChange={handleInputChange}
-          style={{ ...textAreaStyle, minHeight: '200px' }}  // Larger height for Ad Copy
+          style={textAreaStyle}
         />
       </div>
     </div>
