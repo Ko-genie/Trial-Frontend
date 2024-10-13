@@ -16,7 +16,7 @@ const OrganizationIdPage = () => {
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError("");
-    setLoading(true);
+    setLoading(true); // Trigger the loading state
 
     console.log("URL Submitted:", url);
 
@@ -61,7 +61,7 @@ const OrganizationIdPage = () => {
         alignItems: "center",
         flexDirection: "column",
         height: "50vh",
-        width: "100%", // Change this for mobile responsiveness
+        width: "100%",
         background: "rgb(243 244 246)",
         backgroundSize: "cover",
         backgroundPosition: "center",
@@ -87,8 +87,8 @@ const OrganizationIdPage = () => {
         style={{
           marginBottom: "20px",
           display: "flex",
-          flexDirection: "column", // For better spacing on mobile
-          alignItems: "center", // Center elements on smaller screens
+          flexDirection: "column",
+          alignItems: "center",
           width: "100%", // Ensures form is responsive
         }}
       >
@@ -107,7 +107,7 @@ const OrganizationIdPage = () => {
             boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.1)",
             outline: "none",
             transition: "border-color 0.3s ease",
-            marginBottom: "10px", // Ensure there's space between input and button on mobile
+            marginBottom: "10px",
           }}
         />
         <Button
@@ -132,11 +132,59 @@ const OrganizationIdPage = () => {
             e.currentTarget.style.transform = "translateY(0)"; // Reset position
           }}
         >
-          {loading ? "One Sec..." : "Generate Ad"}
+          {loading ? "Just There..." : "Generate Ad"}
         </Button>
       </form>
 
-      {error && <div style={{ color: "red" }}>{error}</div>}
+      {loading && (
+        <div className="overlay">
+          <div className="loading-spinner"></div>
+          <div className="loading-text">Generating Your Ad...</div>
+        </div>
+      )}
+
+      {error && <div style={{ color: "red", marginTop: "20px" }}>{error}</div>}
+
+      {/* Overlay and Loading Spinner CSS */}
+      <style jsx>{`
+        .overlay {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background-color: rgba(0, 0, 0, 0.6); // Dark overlay
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          z-index: 9999; // Ensure it covers everything
+          flex-direction: column;
+        }
+
+        .loading-spinner {
+          border: 8px solid #f3f3f3;
+          border-top: 8px solid #6f42c1;
+          border-radius: 50%;
+          width: 60px;
+          height: 60px;
+          animation: spin 1s linear infinite;
+        }
+
+        .loading-text {
+          color: #fff;
+          margin-top: 15px;
+          font-size: 20px;
+        }
+
+        @keyframes spin {
+          0% {
+            transform: rotate(0deg);
+          }
+          100% {
+            transform: rotate(360deg);
+          }
+        }
+      `}</style>
     </div>
   );
 };
