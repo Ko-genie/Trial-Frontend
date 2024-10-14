@@ -16,13 +16,7 @@ const CreateAdPage = () => {
   const [isMounted, setIsMounted] = useState(false);
   const [imageUrl, setImageUrl] = useState<string | null>(null);
 
-  // Automatically generate ad copy based on product information
-  const generateAdCopy = () => {
-    if (adData.brandName && adData.productName && adData.productDescription) {
-      return `Introducing ${adData.productName} from ${adData.brandName}! ${adData.productDescription}`;
-    }
-    return "Caption of the post goes here...";
-  };
+  const [aspectRatio, setAspectRatio] = useState('16:9'); // Default aspect ratio for Instagram landscape posts
 
   useEffect(() => {
     setIsMounted(true);
@@ -31,16 +25,13 @@ const CreateAdPage = () => {
     }
   }, [adDataFromStore]);
 
-  // Handle input changes
-  const handleInputChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setAdData((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
+  const generateAdCopy = () => {
+    if (adData.brandName && adData.productName && adData.productDescription) {
+      return `Introducing ${adData.productName} from ${adData.brandName}! ${adData.productDescription}`;
+    }
+    return "Caption of the post goes here...";
   };
 
-  // Update the ad copy whenever product info changes
   useEffect(() => {
     const updatedAdCopy = generateAdCopy();
     setAdData((prevState) => ({
@@ -49,7 +40,15 @@ const CreateAdPage = () => {
     }));
   }, [adData.brandName, adData.productName, adData.productDescription]);
 
-  // Handle image upload and resize it to 16:9 aspect ratio (640x360)
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setAdData((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
+
+  // Crop and resize image to match aspect ratio
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
@@ -58,18 +57,41 @@ const CreateAdPage = () => {
         const img = new Image();
         img.src = e.target?.result as string;
         img.onload = () => {
-          // Create a canvas to resize the image
           const canvas = document.createElement("canvas");
           const ctx = canvas.getContext("2d");
 
-          // Set canvas dimensions to 640x360 for 16:9 aspect ratio
-          canvas.width = 640;
-          canvas.height = 360;
+          // Define aspect ratios: 1:1 (square), 4:5 (portrait), 16:9 (landscape)
+          let targetWidth = 640;
+          let targetHeight = 360; // Default for 16:9
 
-          // Draw the image in the canvas with 640x360 dimensions
-          ctx?.drawImage(img, 0, 0, canvas.width, canvas.height);
+          if (aspectRatio === '1:1') {
+            targetWidth = 640;
+            targetHeight = 640;
+          } else if (aspectRatio === '4:5') {
+            targetWidth = 640;
+            targetHeight = 800;
+          }
 
-          // Get the resized image as a data URL
+          canvas.width = targetWidth;
+          canvas.height = targetHeight;
+
+          // Calculate cropping area based on the image's original aspect ratio
+          const imgAspectRatio = img.width / img.height;
+          let sourceWidth = img.width;
+          let sourceHeight = img.height;
+
+          if (imgAspectRatio > targetWidth / targetHeight) {
+            sourceWidth = img.height * (targetWidth / targetHeight);
+          } else {
+            sourceHeight = img.width / (targetWidth / targetHeight);
+          }
+
+          // Center the crop
+          const startX = (img.width - sourceWidth) / 2;
+          const startY = (img.height - sourceHeight) / 2;
+
+          ctx?.drawImage(img, startX, startY, sourceWidth, sourceHeight, 0, 0, targetWidth, targetHeight);
+
           const resizedImageUrl = canvas.toDataURL("image/jpeg", 1.0); // High-quality image
           setImageUrl(resizedImageUrl); // Set the resized image URL
         };
@@ -78,12 +100,11 @@ const CreateAdPage = () => {
     }
   };
 
-  // Handle image download
   const handleDownload = () => {
     if (imageUrl) {
       const link = document.createElement("a");
       link.href = imageUrl;
-      link.download = "instagram_post.jpg"; // Name of the downloaded file
+      link.download = "instagram_post.jpg";
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -92,7 +113,6 @@ const CreateAdPage = () => {
 
   if (!isMounted) return <div>Loading...</div>;
 
-  // Dynamic styling for inputs and text areas
   const inputStyle: CSSProperties = {
     border: "2px solid #CBD5E1",
     padding: "12px",
@@ -108,7 +128,7 @@ const CreateAdPage = () => {
 
   const textAreaStyle: CSSProperties = {
     ...inputStyle,
-    minHeight: "220px", // Larger height for text areas
+    minHeight: "220px",
     resize: "vertical",
   };
 
@@ -119,10 +139,10 @@ const CreateAdPage = () => {
     boxShadow: "0 6px 30px rgba(0, 0, 0, 0.12)",
     fontFamily: "'Inter', sans-serif",
     border: "1px solid rgba(0, 0, 0, 0.05)",
-    width: "50%", // Set the width to 50% for both containers
+    width: "50%",
     transition: "box-shadow 0.3s ease, transform 0.3s ease",
     position: "relative",
-    minHeight: "400px", // Ensure both containers have minimum height
+    minHeight: "400px",
   };
 
   const hoverEffect = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
@@ -201,7 +221,7 @@ const CreateAdPage = () => {
       {/* Image Upload and Preview Section */}
       <div
         style={{
-          ...containerStyle, // Use the same container style for both sections
+          ...containerStyle,
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
@@ -210,12 +230,10 @@ const CreateAdPage = () => {
         onMouseOver={hoverEffect}
         onMouseOut={resetHoverEffect}
       >
-        {/* Suggestion for Image Size */}
         <p style={{ fontSize: "14px", color: "#6b7280", marginBottom: "10px" }}>
           Tip: For the best Instagram preview, use an image with a 16:9 aspect ratio (640x360 pixels).
         </p>
 
-        {/* New Button to Re-upload */}
         <label
           htmlFor="file-upload"
           className="custom-file-upload"
@@ -226,7 +244,7 @@ const CreateAdPage = () => {
             color: "#fff",
             borderRadius: "8px",
             fontWeight: "600",
-            marginBottom: "10px", // Adjusted margin for gap
+            marginBottom: "10px",
           }}
         >
           Upload Image
@@ -235,46 +253,38 @@ const CreateAdPage = () => {
 
         <h1 style={{ marginBottom: "1px", fontSize: "20px", fontWeight: "600" }}>Instagram Post Preview</h1>
 
-        {/* Upload Button */}
         {!imageUrl && (
-          <>
-            <div className="post-image-container" style={{ textAlign: "center", marginBottom: "20px" }}>
-              {/* Placeholder image */}
-              <img
-                src="https://placehold.co/640x360"
-                alt="Placeholder"
-                style={{ width: "100%", borderRadius: "12px" }}
-              />
-            </div>
-          </>
+          <div className="post-image-container" style={{ textAlign: "center", marginBottom: "20px" }}>
+            <img
+              src="https://placehold.co/640x360"
+              alt="Placeholder"
+              style={{ width: "100%", borderRadius: "12px" }}
+            />
+          </div>
         )}
 
-        {/* Instagram Post Clone */}
         {imageUrl && (
           <div
             className="instagram-post"
             style={{
-              marginTop: "50px", // Move Instagram post contents upwards
+              marginTop: "50px",
               width: "100%",
-              border: "2px solid #4f46e5", // Add the color to the Instagram post container
+              border: "2px solid #4f46e5",
               borderRadius: "12px",
               overflow: "hidden",
-              marginBottom: "70px", // Shift content upwards
+              marginBottom: "70px",
             }}
           >
-            {/* Post Header */}
             <div className="header" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "10px" }}>
               <img src="/insta-logo.jpg" style={{ width: "40px", borderRadius: "50%" }} alt="Profile" />
               <span className="username" style={{ fontWeight: "bold" }}>Brand Name</span>
               <span className="menu-icon">•••</span>
             </div>
 
-            {/* Post Image */}
             <div className="post-image-container" style={{ textAlign: "center" }}>
               <img src={imageUrl} className="uploaded-image" alt="Uploaded" style={{ width: "100%", borderRadius: "12px" }} />
             </div>
 
-            {/* Post Footer */}
             <div className="post-footer" style={{ padding: "10px" }}>
               <div className="icons" style={{ display: "flex", justifyContent: "space-between" }}>
                 <FontAwesomeIcon icon={faHeart} className="icon heart-icon" style={{ color: "red" }} />
@@ -284,7 +294,6 @@ const CreateAdPage = () => {
               </div>
               <span className="likes-count" style={{ fontWeight: "bold", marginTop: "8px", display: "block" }}>100 likes</span>
 
-              {/* Ad Copy Caption */}
               <div className="description" style={{ marginTop: "8px" }}>
                 <span className="username" style={{ fontWeight: "bold" }}>Brand Name</span>{" "}
                 {adData.adCopy}
@@ -295,21 +304,20 @@ const CreateAdPage = () => {
           </div>
         )}
 
-        {/* Center-aligned Download Button */}
         {imageUrl && (
           <button
             className="download-btn"
             onClick={handleDownload}
             style={{
-              marginTop: "10px", // Moved button upwards
+              marginTop: "10px",
               padding: "10px 20px",
               backgroundColor: "#4f46e5",
               color: "#fff",
               border: "none",
               borderRadius: "8px",
               cursor: "pointer",
-              textAlign: "center", // Center-align button
-              display: "block", // Ensures it's centered
+              textAlign: "center",
+              display: "block",
             }}
           >
             Download Image
