@@ -10,7 +10,7 @@ const headingFont = localFont({
 
 export const Logo = () => {
   return (
-    <Link href="/">
+    <Link href="https://kogenie.com">
       <div className="hover:opacity-75 transition items-center gap-x-2 hidden md:flex">
         <Image
           src="/logo.svg"
