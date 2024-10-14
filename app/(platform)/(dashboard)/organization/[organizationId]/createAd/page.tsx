@@ -59,8 +59,8 @@ const CreateAdPage = () => {
         img.src = e.target?.result as string;
         img.onload = () => {
           // Create a canvas to resize the image
-          const canvas = document.createElement('canvas');
-          const ctx = canvas.getContext('2d');
+          const canvas = document.createElement("canvas");
+          const ctx = canvas.getContext("2d");
 
           // Set canvas dimensions to 640x360 for 16:9 aspect ratio
           canvas.width = 640;
@@ -70,7 +70,7 @@ const CreateAdPage = () => {
           ctx?.drawImage(img, 0, 0, canvas.width, canvas.height);
 
           // Get the resized image as a data URL
-          const resizedImageUrl = canvas.toDataURL('image/jpeg', 1.0); // High-quality image
+          const resizedImageUrl = canvas.toDataURL("image/jpeg", 1.0); // High-quality image
           setImageUrl(resizedImageUrl); // Set the resized image URL
         };
       };
@@ -144,7 +144,7 @@ const CreateAdPage = () => {
         onMouseOut={resetHoverEffect}
       >
         <div style={{ marginBottom: "20px" }}>
-          <label style={{ display: "block", fontSize: "16px", color: "gray", marginBottom: "8px", fontWeight: "600" }}>
+          <label style={{ display: "block", fontSize: "16px", color: "#4f46e5", marginBottom: "8px", fontWeight: "600" }}>
             Brand Name:
           </label>
           <input
@@ -158,7 +158,7 @@ const CreateAdPage = () => {
         </div>
 
         <div style={{ marginBottom: "20px" }}>
-          <label style={{ display: "block", fontSize: "16px", color: "gray", marginBottom: "8px", fontWeight: "600" }}>
+          <label style={{ display: "block", fontSize: "16px", color: "#4f46e5", marginBottom: "8px", fontWeight: "600" }}>
             Product Name:
           </label>
           <input
@@ -172,7 +172,7 @@ const CreateAdPage = () => {
         </div>
 
         <div style={{ marginBottom: "20px" }}>
-          <label style={{ display: "block", fontSize: "16px", color: "gray", marginBottom: "8px", fontWeight: "600" }}>
+          <label style={{ display: "block", fontSize: "16px", color: "#4f46e5", marginBottom: "8px", fontWeight: "600" }}>
             Product Description:
           </label>
           <textarea
@@ -185,7 +185,7 @@ const CreateAdPage = () => {
         </div>
 
         <div style={{ marginBottom: "20px" }}>
-          <label style={{ display: "block", fontSize: "16px", color: "gray", marginBottom: "8px", fontWeight: "600" }}>
+          <label style={{ display: "block", fontSize: "16px", color: "#4f46e5", marginBottom: "8px", fontWeight: "600" }}>
             Your Ad Copy:
           </label>
           <textarea
@@ -211,7 +211,7 @@ const CreateAdPage = () => {
         onMouseOut={resetHoverEffect}
       >
         {/* Suggestion for Image Size */}
-        <p style={{ fontSize: "14px", color: "gray", marginBottom: "10px" }}>
+        <p style={{ fontSize: "14px", color: "#6b7280", marginBottom: "10px" }}>
           Tip: For the best Instagram preview, use an image with a 16:9 aspect ratio (640x360 pixels).
         </p>
 
@@ -233,7 +233,7 @@ const CreateAdPage = () => {
         </label>
         <input id="file-upload" type="file" accept="image/*" onChange={handleImageUpload} style={{ display: "none" }} />
 
-        <h1 style={{ marginBottom: "5px", fontSize: "20px", fontWeight: "600" }}>Instagram Post Preview</h1> {/* Increased marginBottom to add more gap */}
+        <h1 style={{ marginBottom: "1px", fontSize: "20px", fontWeight: "600" }}>Instagram Post Preview</h1>
 
         {/* Upload Button */}
         {!imageUrl && (
@@ -251,11 +251,21 @@ const CreateAdPage = () => {
 
         {/* Instagram Post Clone */}
         {imageUrl && (
-          <div className="instagram-post" style={{ marginTop: "20px", width: "100%" }}>
+          <div
+            className="instagram-post"
+            style={{
+              marginTop: "50px", // Move Instagram post contents upwards
+              width: "100%",
+              border: "2px solid #4f46e5", // Add the color to the Instagram post container
+              borderRadius: "12px",
+              overflow: "hidden",
+              marginBottom: "70px", // Shift content upwards
+            }}
+          >
             {/* Post Header */}
             <div className="header" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "10px" }}>
               <img src="/insta-logo.jpg" style={{ width: "40px", borderRadius: "50%" }} alt="Profile" />
-              <span className="username" style={{ fontWeight: "bold" }}>username</span>
+              <span className="username" style={{ fontWeight: "bold" }}>Brand Name</span>
               <span className="menu-icon">•••</span>
             </div>
 
@@ -276,18 +286,34 @@ const CreateAdPage = () => {
 
               {/* Ad Copy Caption */}
               <div className="description" style={{ marginTop: "8px" }}>
-                <span className="username" style={{ fontWeight: "bold" }}>username</span>{" "}
+                <span className="username" style={{ fontWeight: "bold" }}>Brand Name</span>{" "}
                 {adData.adCopy}
               </div>
 
-              <div className="time-posted" style={{ marginTop: "8px", color: "gray" }}>2 hours ago</div>
+              <div className="time-posted" style={{ marginTop: "8px", color: "#6b7280" }}>2 hours ago</div>
             </div>
-
-            {/* Download Button */}
-            <button className="download-btn" onClick={handleDownload} style={{ marginTop: "12px", padding: "10px 20px", backgroundColor: "#4f46e5", color: "#fff", border: "none", borderRadius: "8px", cursor: "pointer" }}>
-              Download Image
-            </button>
           </div>
+        )}
+
+        {/* Center-aligned Download Button */}
+        {imageUrl && (
+          <button
+            className="download-btn"
+            onClick={handleDownload}
+            style={{
+              marginTop: "10px", // Moved button upwards
+              padding: "10px 20px",
+              backgroundColor: "#4f46e5",
+              color: "#fff",
+              border: "none",
+              borderRadius: "8px",
+              cursor: "pointer",
+              textAlign: "center", // Center-align button
+              display: "block", // Ensures it's centered
+            }}
+          >
+            Download Image
+          </button>
         )}
       </div>
     </div>
