@@ -3,7 +3,12 @@
 import React, { useState, useEffect, ChangeEvent, CSSProperties } from "react";
 import { useAdStore } from "@/store/useAdStore";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHeart, faComment, faPaperPlane, faBookmark } from "@fortawesome/free-solid-svg-icons";
+import {
+  faHeart,
+  faComment,
+  faPaperPlane,
+  faBookmark,
+} from "@fortawesome/free-solid-svg-icons";
 
 const CreateAdPage = () => {
   const adDataFromStore = useAdStore((state) => state.adData); // Get data from store
@@ -16,7 +21,7 @@ const CreateAdPage = () => {
   const [isMounted, setIsMounted] = useState(false);
   const [imageUrl, setImageUrl] = useState<string | null>(null);
 
-  const [aspectRatio, setAspectRatio] = useState('16:9'); // Default aspect ratio for Instagram landscape posts
+  const [aspectRatio, setAspectRatio] = useState("16:9"); // Default aspect ratio for Instagram landscape posts
 
   useEffect(() => {
     setIsMounted(true);
@@ -40,7 +45,9 @@ const CreateAdPage = () => {
     }));
   }, [adData.brandName, adData.productName, adData.productDescription]);
 
-  const handleInputChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleInputChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target;
     setAdData((prevState) => ({
       ...prevState,
@@ -64,10 +71,10 @@ const CreateAdPage = () => {
           let targetWidth = 640;
           let targetHeight = 360; // Default for 16:9
 
-          if (aspectRatio === '1:1') {
+          if (aspectRatio === "1:1") {
             targetWidth = 640;
             targetHeight = 640;
-          } else if (aspectRatio === '4:5') {
+          } else if (aspectRatio === "4:5") {
             targetWidth = 640;
             targetHeight = 800;
           }
@@ -90,7 +97,17 @@ const CreateAdPage = () => {
           const startX = (img.width - sourceWidth) / 2;
           const startY = (img.height - sourceHeight) / 2;
 
-          ctx?.drawImage(img, startX, startY, sourceWidth, sourceHeight, 0, 0, targetWidth, targetHeight);
+          ctx?.drawImage(
+            img,
+            startX,
+            startY,
+            sourceWidth,
+            sourceHeight,
+            0,
+            0,
+            targetWidth,
+            targetHeight
+          );
 
           const resizedImageUrl = canvas.toDataURL("image/jpeg", 1.0); // High-quality image
           setImageUrl(resizedImageUrl); // Set the resized image URL
@@ -150,13 +167,22 @@ const CreateAdPage = () => {
     e.currentTarget.style.transform = "translateY(-5px)";
   };
 
-  const resetHoverEffect = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+  const resetHoverEffect = (
+    e: React.MouseEvent<HTMLDivElement, MouseEvent>
+  ) => {
     e.currentTarget.style.boxShadow = "0 6px 30px rgba(0, 0, 0, 0.12)";
     e.currentTarget.style.transform = "translateY(0)";
   };
 
   return (
-    <div style={{ display: "flex", justifyContent: "space-between", margin: "40px auto", maxWidth: "1200px" }}>
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "space-between",
+        margin: "40px auto",
+        maxWidth: "1200px",
+      }}
+    >
       {/* Form Section */}
       <div
         style={containerStyle}
@@ -164,7 +190,15 @@ const CreateAdPage = () => {
         onMouseOut={resetHoverEffect}
       >
         <div style={{ marginBottom: "20px" }}>
-          <label style={{ display: "block", fontSize: "16px", color: "#4f46e5", marginBottom: "8px", fontWeight: "600" }}>
+          <label
+            style={{
+              display: "block",
+              fontSize: "16px",
+              color: "#4f46e5",
+              marginBottom: "8px",
+              fontWeight: "600",
+            }}
+          >
             Brand Name:
           </label>
           <input
@@ -178,7 +212,15 @@ const CreateAdPage = () => {
         </div>
 
         <div style={{ marginBottom: "20px" }}>
-          <label style={{ display: "block", fontSize: "16px", color: "#4f46e5", marginBottom: "8px", fontWeight: "600" }}>
+          <label
+            style={{
+              display: "block",
+              fontSize: "16px",
+              color: "#4f46e5",
+              marginBottom: "8px",
+              fontWeight: "600",
+            }}
+          >
             Product Name:
           </label>
           <input
@@ -192,7 +234,15 @@ const CreateAdPage = () => {
         </div>
 
         <div style={{ marginBottom: "20px" }}>
-          <label style={{ display: "block", fontSize: "16px", color: "#4f46e5", marginBottom: "8px", fontWeight: "600" }}>
+          <label
+            style={{
+              display: "block",
+              fontSize: "16px",
+              color: "#4f46e5",
+              marginBottom: "8px",
+              fontWeight: "600",
+            }}
+          >
             Product Description:
           </label>
           <textarea
@@ -205,7 +255,15 @@ const CreateAdPage = () => {
         </div>
 
         <div style={{ marginBottom: "20px" }}>
-          <label style={{ display: "block", fontSize: "16px", color: "#4f46e5", marginBottom: "8px", fontWeight: "600" }}>
+          <label
+            style={{
+              display: "block",
+              fontSize: "16px",
+              color: "#4f46e5",
+              marginBottom: "8px",
+              fontWeight: "600",
+            }}
+          >
             Your Ad Copy:
           </label>
           <textarea
@@ -231,7 +289,8 @@ const CreateAdPage = () => {
         onMouseOut={resetHoverEffect}
       >
         <p style={{ fontSize: "14px", color: "#6b7280", marginBottom: "10px" }}>
-          Tip: For the best Instagram preview, use an image with a 16:9 aspect ratio (640x360 pixels).
+          Tip: For the best Instagram preview, use an image with a 16:9 aspect
+          ratio (640x360 pixels).
         </p>
 
         <label
@@ -240,7 +299,8 @@ const CreateAdPage = () => {
           style={{
             cursor: "pointer",
             padding: "10px 20px",
-            backgroundColor: "#4f46e5",
+            background: "rgb(102, 0, 255)",
+            boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.1)",
             color: "#fff",
             borderRadius: "8px",
             fontWeight: "600",
@@ -249,12 +309,25 @@ const CreateAdPage = () => {
         >
           Upload Image
         </label>
-        <input id="file-upload" type="file" accept="image/*" onChange={handleImageUpload} style={{ display: "none" }} />
+        <input
+          id="file-upload"
+          type="file"
+          accept="image/*"
+          onChange={handleImageUpload}
+          style={{ display: "none" }}
+        />
 
-        <h1 style={{ marginBottom: "1px", fontSize: "20px", fontWeight: "600" }}>Instagram Post Preview</h1>
+        <h1
+          style={{ marginBottom: "1px", fontSize: "20px", fontWeight: "600" }}
+        >
+          Instagram Post Preview
+        </h1>
 
         {!imageUrl && (
-          <div className="post-image-container" style={{ textAlign: "center", marginBottom: "20px" }}>
+          <div
+            className="post-image-container"
+            style={{ textAlign: "center", marginBottom: "20px" }}
+          >
             <img
               src="https://placehold.co/640x360"
               alt="Placeholder"
@@ -275,31 +348,88 @@ const CreateAdPage = () => {
               marginBottom: "70px",
             }}
           >
-            <div className="header" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "10px" }}>
-              <img src="/insta-logo.jpg" style={{ width: "40px", borderRadius: "50%" }} alt="Profile" />
-              <span className="username" style={{ fontWeight: "bold" }}>Brand Name</span>
+            <div
+              className="header"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                padding: "10px",
+              }}
+            >
+              <img
+                src="/insta-logo.jpg"
+                style={{ width: "40px", borderRadius: "50%" }}
+                alt="Profile"
+              />
+              <span className="username" style={{ fontWeight: "bold" }}>
+                Brand Name
+              </span>
               <span className="menu-icon">•••</span>
             </div>
 
-            <div className="post-image-container" style={{ textAlign: "center" }}>
-              <img src={imageUrl} className="uploaded-image" alt="Uploaded" style={{ width: "100%", borderRadius: "12px" }} />
+            <div
+              className="post-image-container"
+              style={{ textAlign: "center" }}
+            >
+              <img
+                src={imageUrl}
+                className="uploaded-image"
+                alt="Uploaded"
+                style={{ width: "100%", borderRadius: "12px" }}
+              />
             </div>
 
             <div className="post-footer" style={{ padding: "10px" }}>
-              <div className="icons" style={{ display: "flex", justifyContent: "space-between" }}>
-                <FontAwesomeIcon icon={faHeart} className="icon heart-icon" style={{ color: "red" }} />
-                <FontAwesomeIcon icon={faComment} className="icon black-icon" style={{ color: "black" }} />
-                <FontAwesomeIcon icon={faPaperPlane} className="icon black-icon" style={{ color: "black" }} />
-                <FontAwesomeIcon icon={faBookmark} className="icon black-icon save" style={{ color: "black" }} />
+              <div
+                className="icons"
+                style={{ display: "flex", justifyContent: "space-between" }}
+              >
+                <FontAwesomeIcon
+                  icon={faHeart}
+                  className="icon heart-icon"
+                  style={{ color: "red" }}
+                />
+                <FontAwesomeIcon
+                  icon={faComment}
+                  className="icon black-icon"
+                  style={{ color: "black" }}
+                />
+                <FontAwesomeIcon
+                  icon={faPaperPlane}
+                  className="icon black-icon"
+                  style={{ color: "black" }}
+                />
+                <FontAwesomeIcon
+                  icon={faBookmark}
+                  className="icon black-icon save"
+                  style={{ color: "black" }}
+                />
               </div>
-              <span className="likes-count" style={{ fontWeight: "bold", marginTop: "8px", display: "block" }}>100 likes</span>
+              <span
+                className="likes-count"
+                style={{
+                  fontWeight: "bold",
+                  marginTop: "8px",
+                  display: "block",
+                }}
+              >
+                100 likes
+              </span>
 
               <div className="description" style={{ marginTop: "8px" }}>
-                <span className="username" style={{ fontWeight: "bold" }}>Brand Name</span>{" "}
+                <span className="username" style={{ fontWeight: "bold" }}>
+                  Brand Name
+                </span>{" "}
                 {adData.adCopy}
               </div>
 
-              <div className="time-posted" style={{ marginTop: "8px", color: "#6b7280" }}>2 hours ago</div>
+              <div
+                className="time-posted"
+                style={{ marginTop: "8px", color: "#6b7280" }}
+              >
+                2 hours ago
+              </div>
             </div>
           </div>
         )}
@@ -311,7 +441,8 @@ const CreateAdPage = () => {
             style={{
               marginTop: "10px",
               padding: "10px 20px",
-              backgroundColor: "#4f46e5",
+              background: "rgb(102, 0, 255)",
+              boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.1)",
               color: "#fff",
               border: "none",
               borderRadius: "8px",
