@@ -254,7 +254,7 @@ const CreateAdPage = () => {
           <div className="instagram-post" style={{ marginTop: "20px", width: "100%" }}>
             {/* Post Header */}
             <div className="header" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "10px" }}>
-              <img src="/logo.jpeg" style={{ width: "40px", borderRadius: "50%" }} alt="Profile" />
+              <img src="/insta-logo.jpg" style={{ width: "40px", borderRadius: "50%" }} alt="Profile" />
               <span className="username" style={{ fontWeight: "bold" }}>username</span>
               <span className="menu-icon">•••</span>
             </div>
