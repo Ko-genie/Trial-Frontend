@@ -36,6 +36,8 @@ const advertisementFacts = [
 
 const OrganizationIdPage = () => {
   const [url, setUrl] = useState("");
+  const [gender, setGender] = useState("global"); // default to 'global'
+  const [ageGroup, setAgeGroup] = useState("9-18"); // default to the first age group
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [currentFact, setCurrentFact] = useState(0); // For showing random ad facts
@@ -69,7 +71,7 @@ const OrganizationIdPage = () => {
       const response = await fetch("http://localhost:5001/createAd", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ url }),
+        body: JSON.stringify({ url, gender, ageGroup }), // Send gender and ageGroup along with the URL
       });
 
       const data = await response.json();
@@ -148,6 +150,47 @@ const OrganizationIdPage = () => {
             marginBottom: "10px",
           }}
         />
+
+        {/* Gender and Age Group selection */}
+        <div
+          style={{
+            marginBottom: "10px",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            gap: "10px",
+            width: "100%",
+          }}
+        >
+          <div>
+            <label>Gender: </label>
+            <select
+              value={gender}
+              onChange={(e) => setGender(e.target.value)}
+              style={{ padding: "8px", borderRadius: "5px" }}
+            >
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+              <option value="others">Others</option>
+              <option value="global">Global</option>
+            </select>
+          </div>
+
+          <div>
+            <label>Age Group: </label>
+            <select
+              value={ageGroup}
+              onChange={(e) => setAgeGroup(e.target.value)}
+              style={{ padding: "8px", borderRadius: "5px" }}
+            >
+              <option value="9-18">9-18</option>
+              <option value="18-25">18-25</option>
+              <option value="25-40">25-40</option>
+              <option value="40-60">40-60</option>
+              <option value="60+">60+</option>
+            </select>
+          </div>
+        </div>
 
         {!loading ? (
           <Button
