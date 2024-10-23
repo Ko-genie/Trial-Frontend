@@ -56,70 +56,68 @@ const CreateAdPage = () => {
     }));
   };
 
-  // Crop and resize image to match aspect ratio
-  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        // Image creation fixed to remove the TypeScript error.
-        const img = new Image();
-        img.width = 640;
-        img.height = 360;
-        img.src = e.target?.result as string;
-        img.onload = () => {
-          const canvas = document.createElement("canvas");
-          const ctx = canvas.getContext("2d");
-    
-          // Define aspect ratios: 1:1 (square), 4:5 (portrait), 16:9 (landscape)
-          let targetWidth = 640;
-          let targetHeight = 360; // Default for 16:9
-    
-          if (aspectRatio === "1:1") {
-            targetWidth = 640;
-            targetHeight = 640;
-          } else if (aspectRatio === "4:5") {
-            targetWidth = 640;
-            targetHeight = 800;
-          }
-    
-          canvas.width = targetWidth;
-          canvas.height = targetHeight;
-    
-          // Calculate cropping area based on the image's original aspect ratio
-          const imgAspectRatio = img.width / img.height;
-          let sourceWidth = img.width;
-          let sourceHeight = img.height;
-    
-          if (imgAspectRatio > targetWidth / targetHeight) {
-            sourceWidth = img.height * (targetWidth / targetHeight);
-          } else {
-            sourceHeight = img.width / (targetWidth / targetHeight);
-          }
-    
-          // Center the crop
-          const startX = (img.width - sourceWidth) / 2;
-          const startY = (img.height - sourceHeight) / 2;
-    
-          ctx?.drawImage(
-            img,
-            startX,
-            startY,
-            sourceWidth,
-            sourceHeight,
-            0,
-            0,
-            targetWidth,
-            targetHeight
-          );
-    
-          const resizedImageUrl = canvas.toDataURL("image/jpeg", 1.0); // High-quality image
-          setImageUrl(resizedImageUrl); // Set the resized image URL
-        };
+// Crop and resize image to match aspect ratio
+const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const file = event.target.files?.[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      // Use the native Image constructor explicitly
+      const img = new window.Image(640, 360);
+      img.src = e.target?.result as string;
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
+
+        // Define aspect ratios: 1:1 (square), 4:5 (portrait), 16:9 (landscape)
+        let targetWidth = 640;
+        let targetHeight = 360; // Default for 16:9
+
+        if (aspectRatio === "1:1") {
+          targetWidth = 640;
+          targetHeight = 640;
+        } else if (aspectRatio === "4:5") {
+          targetWidth = 640;
+          targetHeight = 800;
+        }
+
+        canvas.width = targetWidth;
+        canvas.height = targetHeight;
+
+        // Calculate cropping area based on the image's original aspect ratio
+        const imgAspectRatio = img.width / img.height;
+        let sourceWidth = img.width;
+        let sourceHeight = img.height;
+
+        if (imgAspectRatio > targetWidth / targetHeight) {
+          sourceWidth = img.height * (targetWidth / targetHeight);
+        } else {
+          sourceHeight = img.width / (targetWidth / targetHeight);
+        }
+
+        // Center the crop
+        const startX = (img.width - sourceWidth) / 2;
+        const startY = (img.height - sourceHeight) / 2;
+
+        ctx?.drawImage(
+          img,
+          startX,
+          startY,
+          sourceWidth,
+          sourceHeight,
+          0,
+          0,
+          targetWidth,
+          targetHeight
+        );
+
+        const resizedImageUrl = canvas.toDataURL("image/jpeg", 1.0); // High-quality image
+        setImageUrl(resizedImageUrl); // Set the resized image URL
       };
-      reader.readAsDataURL(file);
-    }
-  };
+    };
+    reader.readAsDataURL(file);
+  }
+};
 
   const handleDownload = () => {
     if (imageUrl) {
@@ -333,7 +331,7 @@ const CreateAdPage = () => {
             style={{ textAlign: "center", marginBottom: "20px" }}
           >
             <Image
-              src="https://placehold.co/640x360"
+              src="/background1.jpg"
               alt="Placeholder"
               width={640}
               height={360}
