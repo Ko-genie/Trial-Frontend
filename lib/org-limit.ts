@@ -1,10 +1,11 @@
-import { auth } from "@clerk/nextjs";
+import { auth } from "@clerk/nextjs/server";
 
 import { db } from "@/lib/db";
 import { MAX_FREE_BOARDS } from "@/constants/boards";
 
 export const incrementAvailableCount = async () => {
-  const { orgId } = auth();
+  const authResult = await auth();
+  const { orgId } = authResult;
 
   if (!orgId) {
     throw new Error("Unauthorized");
@@ -27,7 +28,8 @@ export const incrementAvailableCount = async () => {
 };
 
 export const decreaseAvailableCount = async () => {
-  const { orgId } = auth();
+  const authResult = await auth();
+  const { orgId } = authResult;
 
   if (!orgId) {
     throw new Error("Unauthorized");
@@ -50,10 +52,11 @@ export const decreaseAvailableCount = async () => {
 };
 
 export const hasAvailableCount = async () => {
-  const { orgId } = auth();
+  const authResult = await auth();
+  const { orgId } = authResult;
 
   if (!orgId) {
-    throw new Error ("Unauthorized");
+    throw new Error("Unauthorized");
   }
 
   const orgLimit = await db.orgLimit.findUnique({
@@ -68,7 +71,8 @@ export const hasAvailableCount = async () => {
 };
 
 export const getAvailableCount = async () => {
-  const { orgId } = auth();
+  const authResult = await auth();
+  const { orgId } = authResult;
 
   if (!orgId) {
     return 0;
