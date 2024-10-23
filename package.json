@@ -22,7 +22,7 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "lucide-react": "^0.446.0",
-    "next": "14.2.13",
+    "next": "^14.2.12",
     "react": "^18",
     "react-dom": "^18",
     "sonner": "^1.5.0",
@@ -41,6 +41,7 @@
     "postcss": "^8.4.47",
     "shadcn-ui": "^0.2.3",
     "tailwindcss": "^3.4.13",
-    "typescript": "^5"
+    "typescript": "^5",
+    "uglify-js": "^3.19.3"
   }
 }

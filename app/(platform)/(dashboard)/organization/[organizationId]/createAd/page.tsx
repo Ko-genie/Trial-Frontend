@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, ChangeEvent, CSSProperties } from "react";
+import Image from "next/image";
 import { useAdStore } from "@/store/useAdStore";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -21,7 +22,7 @@ const CreateAdPage = () => {
   const [isMounted, setIsMounted] = useState(false);
   const [imageUrl, setImageUrl] = useState<string | null>(null);
 
-  const [aspectRatio, setAspectRatio] = useState("16:9"); // Default aspect ratio for Instagram landscape posts
+  const [aspectRatio] = useState("16:9"); // Default aspect ratio for Instagram landscape posts
 
   useEffect(() => {
     setIsMounted(true);
@@ -30,14 +31,14 @@ const CreateAdPage = () => {
     }
   }, [adDataFromStore]);
 
-  const generateAdCopy = () => {
-    if (adData.brandName && adData.productName && adData.productDescription) {
-      return `Introducing ${adData.productName} from ${adData.brandName}! ${adData.productDescription}`;
-    }
-    return "Caption of the post goes here...";
-  };
-
   useEffect(() => {
+    const generateAdCopy = () => {
+      if (adData.brandName && adData.productName && adData.productDescription) {
+        return `Introducing ${adData.productName} from ${adData.brandName}! ${adData.productDescription}`;
+      }
+      return "Caption of the post goes here...";
+    };
+
     const updatedAdCopy = generateAdCopy();
     setAdData((prevState) => ({
       ...prevState,
@@ -328,10 +329,12 @@ const CreateAdPage = () => {
             className="post-image-container"
             style={{ textAlign: "center", marginBottom: "20px" }}
           >
-            <img
+            <Image
               src="https://placehold.co/640x360"
               alt="Placeholder"
-              style={{ width: "100%", borderRadius: "12px" }}
+              width={640}
+              height={360}
+              style={{ borderRadius: "12px" }}
             />
           </div>
         )}
@@ -357,10 +360,12 @@ const CreateAdPage = () => {
                 padding: "10px",
               }}
             >
-              <img
+              <Image
                 src="/insta-logo.jpg"
-                style={{ width: "40px", borderRadius: "50%" }}
                 alt="Profile"
+                width={40}
+                height={40}
+                style={{ borderRadius: "50%" }}
               />
               <span className="username" style={{ fontWeight: "bold" }}>
                 Brand Name
@@ -372,11 +377,12 @@ const CreateAdPage = () => {
               className="post-image-container"
               style={{ textAlign: "center" }}
             >
-              <img
+              <Image
                 src={imageUrl}
-                className="uploaded-image"
                 alt="Uploaded"
-                style={{ width: "100%", borderRadius: "12px" }}
+                width={640}
+                height={360}
+                style={{ borderRadius: "12px" }}
               />
             </div>
 
