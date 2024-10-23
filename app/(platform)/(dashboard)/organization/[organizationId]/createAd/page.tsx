@@ -62,16 +62,19 @@ const CreateAdPage = () => {
     if (file) {
       const reader = new FileReader();
       reader.onload = (e) => {
+        // Image creation fixed to remove the TypeScript error.
         const img = new Image();
+        img.width = 640;
+        img.height = 360;
         img.src = e.target?.result as string;
         img.onload = () => {
           const canvas = document.createElement("canvas");
           const ctx = canvas.getContext("2d");
-
+    
           // Define aspect ratios: 1:1 (square), 4:5 (portrait), 16:9 (landscape)
           let targetWidth = 640;
           let targetHeight = 360; // Default for 16:9
-
+    
           if (aspectRatio === "1:1") {
             targetWidth = 640;
             targetHeight = 640;
@@ -79,25 +82,25 @@ const CreateAdPage = () => {
             targetWidth = 640;
             targetHeight = 800;
           }
-
+    
           canvas.width = targetWidth;
           canvas.height = targetHeight;
-
+    
           // Calculate cropping area based on the image's original aspect ratio
           const imgAspectRatio = img.width / img.height;
           let sourceWidth = img.width;
           let sourceHeight = img.height;
-
+    
           if (imgAspectRatio > targetWidth / targetHeight) {
             sourceWidth = img.height * (targetWidth / targetHeight);
           } else {
             sourceHeight = img.width / (targetWidth / targetHeight);
           }
-
+    
           // Center the crop
           const startX = (img.width - sourceWidth) / 2;
           const startY = (img.height - sourceHeight) / 2;
-
+    
           ctx?.drawImage(
             img,
             startX,
@@ -109,7 +112,7 @@ const CreateAdPage = () => {
             targetWidth,
             targetHeight
           );
-
+    
           const resizedImageUrl = canvas.toDataURL("image/jpeg", 1.0); // High-quality image
           setImageUrl(resizedImageUrl); // Set the resized image URL
         };
