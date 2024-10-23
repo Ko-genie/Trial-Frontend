@@ -1,5 +1,6 @@
 import { auth, currentUser } from "@clerk/nextjs/server";
 import { ACTION, ENTITY_TYPE } from "@prisma/client";
+console.log(ACTION, ENTITY_TYPE);  // Debugging line to verify enum imports
 import { db } from "@/lib/db";
 
 interface Props {
