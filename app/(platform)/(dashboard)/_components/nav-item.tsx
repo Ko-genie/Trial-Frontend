@@ -3,10 +3,10 @@
 import { useRouter, usePathname } from "next/navigation";
 import Image from "next/image";
 import {
-  Activity,
-  CreditCard,
+  // Activity,
+  // CreditCard,
   Layout,
-  Settings,
+  // Settings,
 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
