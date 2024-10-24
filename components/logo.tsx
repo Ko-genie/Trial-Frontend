@@ -15,15 +15,15 @@ export const Logo = () => {
         <Image
           src="/logo.svg"
           alt="Logo"
-          height={30}
-          width={30}
+          height={120}
+          width={120}
         />
-        <p className={cn(
+        {/* <p className={cn(
           "text-lg text-neutral-700 pb-1",
           headingFont.className,
         )}>
           KOgenie
-        </p>
+        </p> */}
       </div>
     </Link>
   );
