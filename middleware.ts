@@ -1,13 +1,16 @@
 import { NextResponse } from "next/server";
 import { authMiddleware } from "@clerk/nextjs/server";
-// import { RedirectToSignIn } from "@clerk/nextjs";
+
+// This example protects all routes including api/trpc routes
+// Please edit this to allow other routes to be public as needed.
+// See https://clerk.com/docs/references/nextjs/auth-middleware for more information about configuring your Middleware
 
 export default authMiddleware({
   publicRoutes: ['/'],  // Handle dynamic segments with :param syntax
   afterAuth(auth, req) {
     // Ensure that 'auth' is properly initialized
     if (!auth) {
-      return NextResponse.error(new Error("Authentication object is missing"));
+      return NextResponse.error();
     }
 
     // If the user is authenticated and the route is public, redirect to organization selection or organization page
@@ -23,12 +26,6 @@ export default authMiddleware({
       return NextResponse.redirect(orgSelection);
     }
 
-    // If the user is not authenticated and the route is not public, redirect to sign-in
-    // if (!auth.userId && !auth.isPublicRoute) {
-    //   return RedirectToSignIn({ redirectUrl: req.url });
-    // }
-
-    // If the user is authenticated but hasn't selected an organization, redirect to organization selection
     if (auth.userId && !auth.orgId && req.nextUrl.pathname !== "/select-org") {
       const orgSelection = new URL("/select-org", req.url);
       return NextResponse.redirect(orgSelection);
@@ -42,14 +39,3 @@ export default authMiddleware({
 export const config = {
   matcher: ['/((?!.+\\.[\\w]+$|_next).*)', '/', '/(api|trpc)(.*)'],
 };
-
-// import { NextResponse } from "next/server";
-// import { authMiddleware } from "@clerk/nextjs/server";
-
-// export default authMiddleware({
-//   publicRoutes: ['/', '/organization/:organizationId/createAd'],  // Ensure this matches your dynamic route
-// });
-
-// export const config = {
-//   matcher: ['/((?!.+\\.[\\w]+$|_next).*)', '/', '/(api|trpc)(.*)'],
-// };
