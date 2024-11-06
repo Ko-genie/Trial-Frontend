@@ -11,6 +11,19 @@ const nextConfig = {
         protocol: "https",
         hostname: "images.unsplash.com",
       },
+      // {
+      //   protocol: "https",
+      //   hostname: "*.bluestone.com", // Allow all subdomains of bluestone.com
+      // },
+      {
+        protocol: "http",
+        hostname: "localhost",
+        port: "5001",
+      },
+      {
+        protocol: "https",
+        hostname: "kogenie.com", // For production
+      },
     ],
   },
 };

@@ -1,128 +1,70 @@
 "use client";
 
-import React, { useState, useEffect, ChangeEvent, CSSProperties } from "react";
-import Image from "next/image";
+import React, { useState, useEffect, CSSProperties, ChangeEvent } from "react";
 import { useAdStore } from "@/store/useAdStore";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faHeart,
-  faComment,
-  faPaperPlane,
-  faBookmark,
-} from "@fortawesome/free-solid-svg-icons";
+import { faHeart, faComment, faPaperPlane, faBookmark } from "@fortawesome/free-solid-svg-icons";
+import Image from "next/image";
+import { Button } from "@/components/ui/button";
 
-const CreateAdPage = () => {
-  const adDataFromStore = useAdStore((state) => state.adData); // Get data from store
-  const [adData, setAdData] = useState({
-    brandName: "",
-    productName: "",
-    productDescription: "",
-    adCopy: "",
-  });
-  const [isMounted, setIsMounted] = useState(false);
-  const [imageUrl, setImageUrl] = useState<string | null>(null);
+interface AdData {
+  brandName?: string;
+  productName?: string;
+  productDescription?: string;
+  adCopy?: string;
+  images?: string[];
+}
 
-  const [aspectRatio] = useState("16:9"); // Default aspect ratio for Instagram landscape posts
+const CreateAdPage: React.FC = () => {
+  const adData: AdData = useAdStore((state) => state.adData) || {};
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [showGallery, setShowGallery] = useState(false);
 
   useEffect(() => {
-    setIsMounted(true);
-    if (adDataFromStore) {
-      setAdData(adDataFromStore); // Set initial ad data from the store
+    if (adData?.images?.[0]) {
+      setSelectedImage(adData.images[0]);
     }
-  }, [adDataFromStore]);
+  }, [adData]);
+
+  const generateAdCopy = () => {
+    if (adData.brandName && adData.productName && adData.productDescription) {
+      return `Introducing ${adData.productName} from ${adData.brandName}! ${adData.productDescription}`;
+    }
+    return "Caption of the post goes here...";
+  };
 
   useEffect(() => {
-    const generateAdCopy = () => {
-      if (adData.brandName && adData.productName && adData.productDescription) {
-        return `Introducing ${adData.productName} from ${adData.brandName}! ${adData.productDescription}`;
-      }
-      return "Caption of the post goes here...";
-    };
-
     const updatedAdCopy = generateAdCopy();
-    setAdData((prevState) => ({
+    useAdStore.setState((prevState) => ({
       ...prevState,
       adCopy: updatedAdCopy,
     }));
   }, [adData.brandName, adData.productName, adData.productDescription]);
 
-  const handleInputChange = (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    setAdData((prevState) => ({
+    useAdStore.setState((prevState) => ({
       ...prevState,
       [name]: value,
     }));
   };
 
-// Crop and resize image to match aspect ratio
-const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-  const file = event.target.files?.[0];
-  if (file) {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      // Use the native Image constructor explicitly
-      const img = new window.Image(640, 360);
-      img.src = e.target?.result as string;
-      img.onload = () => {
-        const canvas = document.createElement("canvas");
-        const ctx = canvas.getContext("2d");
-
-        // Define aspect ratios: 1:1 (square), 4:5 (portrait), 16:9 (landscape)
-        let targetWidth = 640;
-        let targetHeight = 360; // Default for 16:9
-
-        if (aspectRatio === "1:1") {
-          targetWidth = 640;
-          targetHeight = 640;
-        } else if (aspectRatio === "4:5") {
-          targetWidth = 640;
-          targetHeight = 800;
-        }
-
-        canvas.width = targetWidth;
-        canvas.height = targetHeight;
-
-        // Calculate cropping area based on the image's original aspect ratio
-        const imgAspectRatio = img.width / img.height;
-        let sourceWidth = img.width;
-        let sourceHeight = img.height;
-
-        if (imgAspectRatio > targetWidth / targetHeight) {
-          sourceWidth = img.height * (targetWidth / targetHeight);
-        } else {
-          sourceHeight = img.width / (targetWidth / targetHeight);
-        }
-
-        // Center the crop
-        const startX = (img.width - sourceWidth) / 2;
-        const startY = (img.height - sourceHeight) / 2;
-
-        ctx?.drawImage(
-          img,
-          startX,
-          startY,
-          sourceWidth,
-          sourceHeight,
-          0,
-          0,
-          targetWidth,
-          targetHeight
-        );
-
-        const resizedImageUrl = canvas.toDataURL("image/jpeg", 1.0); // High-quality image
-        setImageUrl(resizedImageUrl); // Set the resized image URL
+  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        const uploadedUrl = reader.result as string;
+        setSelectedImage(uploadedUrl);
       };
-    };
-    reader.readAsDataURL(file);
-  }
-};
+      reader.readAsDataURL(file);
+    }
+  };
 
   const handleDownload = () => {
-    if (imageUrl) {
+    if (selectedImage) {
       const link = document.createElement("a");
-      link.href = imageUrl;
+      link.href = selectedImage;
       link.download = "instagram_post.jpg";
       document.body.appendChild(link);
       link.click();
@@ -130,7 +72,13 @@ const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     }
   };
 
-  if (!isMounted) return <div>Loading...</div>;
+  const labelStyle: CSSProperties = {
+    display: "block",
+    fontSize: "16px",
+    color: "#DB4A2B",
+    marginBottom: "8px",
+    fontWeight: "600",
+  };
 
   const inputStyle: CSSProperties = {
     border: "2px solid #CBD5E1",
@@ -145,9 +93,20 @@ const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     transition: "border-color 0.2s ease",
   };
 
-  const textAreaStyle: CSSProperties = {
+  // Smaller textarea for Product Description
+  const productDescriptionStyle: CSSProperties = {
     ...inputStyle,
-    minHeight: "220px",
+    minHeight: "100px",
+    resize: "vertical",
+    textAlign: "left",
+  };
+
+  // Larger textarea for Ad Copy
+  const adCopyStyle: CSSProperties = {
+    ...inputStyle,
+    minHeight: "300px",
+    padding: "16px",
+    fontSize: "18px",
     resize: "vertical",
   };
 
@@ -169,9 +128,7 @@ const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     e.currentTarget.style.transform = "translateY(-5px)";
   };
 
-  const resetHoverEffect = (
-    e: React.MouseEvent<HTMLDivElement, MouseEvent>
-  ) => {
+  const resetHoverEffect = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     e.currentTarget.style.boxShadow = "0 6px 30px rgba(0, 0, 0, 0.12)";
     e.currentTarget.style.transform = "translateY(0)";
   };
@@ -192,93 +149,50 @@ const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
         onMouseOut={resetHoverEffect}
       >
         <div style={{ marginBottom: "20px" }}>
-          <label
-            style={{
-              display: "block",
-              fontSize: "16px",
-              color: "#4f46e5",
-              marginBottom: "8px",
-              fontWeight: "600",
-            }}
-          >
-            Brand Name:
-          </label>
+          <label style={labelStyle}>Brand Name:</label>
           <input
             type="text"
             name="brandName"
             placeholder="Enter your brand name"
-            value={adData.brandName}
+            value={adData.brandName || ""}
             onChange={handleInputChange}
             style={inputStyle}
           />
         </div>
-
         <div style={{ marginBottom: "20px" }}>
-          <label
-            style={{
-              display: "block",
-              fontSize: "16px",
-              color: "#4f46e5",
-              marginBottom: "8px",
-              fontWeight: "600",
-            }}
-          >
-            Product Name:
-          </label>
+          <label style={labelStyle}>Product Name:</label>
           <input
             type="text"
             name="productName"
             placeholder="Enter your product name"
-            value={adData.productName}
+            value={adData.productName || ""}
             onChange={handleInputChange}
             style={inputStyle}
           />
         </div>
-
         <div style={{ marginBottom: "20px" }}>
-          <label
-            style={{
-              display: "block",
-              fontSize: "16px",
-              color: "#4f46e5",
-              marginBottom: "8px",
-              fontWeight: "600",
-            }}
-          >
-            Product Description:
-          </label>
+          <label style={labelStyle}>Product Description:</label>
           <textarea
             name="productDescription"
-            value={adData.productDescription}
+            value={adData.productDescription || ""}
             placeholder="Describe your product..."
             onChange={handleInputChange}
-            style={textAreaStyle}
+            style={productDescriptionStyle}
           />
         </div>
-
         <div style={{ marginBottom: "20px" }}>
-          <label
-            style={{
-              display: "block",
-              fontSize: "16px",
-              color: "#4f46e5",
-              marginBottom: "8px",
-              fontWeight: "600",
-            }}
-          >
-            Your Ad Copy:
-          </label>
+          <label style={labelStyle}>Ad Copy:</label>
           <textarea
             name="adCopy"
-            value={adData.adCopy}
+            value={adData.adCopy || ""}
             placeholder="Edit your ad copy..."
             onChange={handleInputChange}
-            style={textAreaStyle}
+            style={adCopyStyle}
           />
         </div>
       </div>
 
-      {/* Image Upload and Preview Section */}
+      {/* Image Upload and Gallery Container */}
       <div
         style={{
           ...containerStyle,
@@ -292,16 +206,15 @@ const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
       >
         <p style={{ fontSize: "14px", color: "#6b7280", marginBottom: "10px" }}>
           Tip: For the best Instagram preview, use an image with a 16:9 aspect
-          ratio (640x360 pixels).
+          ratio
         </p>
-
         <label
           htmlFor="file-upload"
           className="custom-file-upload"
           style={{
             cursor: "pointer",
             padding: "10px 20px",
-            background: "rgb(102, 0, 255)",
+            background: "#DB4A2B",
             boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.1)",
             color: "#fff",
             borderRadius: "8px",
@@ -319,73 +232,109 @@ const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
           style={{ display: "none" }}
         />
 
+        <Button
+          className="bg-[#DB4A2B] hover:bg-[#DB4A2B]/90"
+          onClick={() => setShowGallery(true)}
+          style={{ margin: "15px 0" }}
+        >
+          Choose Image From Website
+        </Button>
+
         <h1
           style={{ marginBottom: "1px", fontSize: "20px", fontWeight: "600" }}
         >
           Instagram Post Preview
         </h1>
 
-        {!imageUrl && (
-          <div
-            className="post-image-container"
-            style={{ textAlign: "center", marginBottom: "20px" }}
-          >
-            <Image
-              src="/background1.jpg"
-              alt="Placeholder"
-              width={640}
-              height={360}
-              style={{ borderRadius: "12px" }}
-            />
+        {/* Gallery Modal */}
+        {showGallery && (
+          <div style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}>
+            <div style={{
+              background: "#FFF",
+              padding: "20px",
+              borderRadius: "12px",
+              maxWidth: "500px",
+              width: "100%",
+              textAlign: "center",
+              overflowY: "auto",
+              maxHeight: "80vh",
+            }}>
+              <h3>Select an Image</h3>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: "10px", justifyContent: "center", marginTop: "15px" }}>
+                {adData.images?.map((imgSrc, idx) => (
+                  <img
+                    key={idx}
+                    src={imgSrc}
+                    alt="Scraped"
+                    onClick={() => {
+                      setSelectedImage(imgSrc);
+                      setShowGallery(false);
+                    }}
+                    style={{
+                      width: "100px",
+                      height: "100px",
+                      cursor: "pointer",
+                      borderRadius: "8px",
+                      boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+                      transition: "transform 0.3s ease",
+                      border: selectedImage === imgSrc ? "3px solid #4f46e5" : "none",
+                    }}
+                  />
+                ))}
+              </div>
+              <button onClick={() => setShowGallery(false)} style={{ marginTop: "20px", padding: "10px 20px", background: "#DB4A2B", color: "#FFF", borderRadius: "8px", fontWeight: "600", cursor: "pointer" }}>Close</button>
+            </div>
           </div>
         )}
 
-        {imageUrl && (
-          <div
-            className="instagram-post"
-            style={{
-              marginTop: "50px",
-              width: "100%",
-              border: "2px solid #4f46e5",
-              borderRadius: "12px",
-              overflow: "hidden",
-              marginBottom: "70px",
-            }}
-          >
-            <div
-              className="header"
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                padding: "10px",
-              }}
-            >
-              <Image
-                src="/insta-logo.jpg"
-                alt="Profile"
-                width={40}
-                height={40}
-                style={{ borderRadius: "50%" }}
+        {/* Selected Image Preview */}
+        {selectedImage && (
+          <div style={{ marginTop: "30px", textAlign: "center", border: "2px solid #4f46e5", borderRadius: "12px", overflow: "hidden", width: "100%", marginBottom: "70px" }}>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "10px", borderBottom: "1px solid #e5e7eb" }}>
+              
+              <Image 
+                src="/insta-logo.jpg" 
+                alt="Profile" 
+                width={40} 
+                height={40} 
+                style={{ borderRadius: "50%" }} 
               />
-              <span className="username" style={{ fontWeight: "bold" }}>
-                Brand Name
+
+              <span 
+              style={{ fontWeight: "bold" }}>{adData.brandName}
               </span>
-              <span className="menu-icon">•••</span>
+
+              <span>
+                •••
+                </span>
+
             </div>
 
-            <div
-              className="post-image-container"
-              style={{ textAlign: "center" }}
-            >
-              <Image
-                src={imageUrl}
-                alt="Uploaded"
-                width={640}
-                height={360}
-                style={{ borderRadius: "12px" }}
-              />
-            </div>
+            {/* Selected Image - Proportional Scaling */}
+            
+            <img 
+            src={selectedImage} 
+            alt="Selected" 
+            style={{ 
+              width: "50%", 
+              height: "50%", 
+              borderRadius: "12px",
+              maxHeight: "400px",
+              display: "block",         // Center the image as a block-level element
+              margin: "0 auto",         // Horizontal centering
+            }} 
+          />
+
 
             <div className="post-footer" style={{ padding: "10px" }}>
               <div
@@ -419,14 +368,15 @@ const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
                   fontWeight: "bold",
                   marginTop: "8px",
                   display: "block",
+                  textAlign: "left",
                 }}
               >
                 100 likes
               </span>
 
-              <div className="description" style={{ marginTop: "8px" }}>
+              <div className="description" style={{ marginTop: "8px", textAlign: "left" }}>
                 <span className="username" style={{ fontWeight: "bold" }}>
-                  Brand Name
+                {adData.brandName}
                 </span>{" "}
                 {adData.adCopy}
               </div>
@@ -441,25 +391,19 @@ const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
           </div>
         )}
 
-        {imageUrl && (
-          <button
-            className="download-btn"
-            onClick={handleDownload}
-            style={{
-              marginTop: "10px",
-              padding: "10px 20px",
-              background: "rgb(102, 0, 255)",
-              boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.1)",
-              color: "#fff",
-              border: "none",
-              borderRadius: "8px",
-              cursor: "pointer",
-              textAlign: "center",
-              display: "block",
-            }}
-          >
-            Download Image
-          </button>
+        {selectedImage && (
+          <Button 
+            onClick={handleDownload} 
+            style={{ 
+              marginTop: "10px", 
+              padding: "10px 20px", 
+              background: "#DB4A2B", 
+              color: "#fff", 
+              borderRadius: "8px", 
+              cursor: "pointer" }}
+            >
+              Download Image
+            </Button>
         )}
       </div>
     </div>

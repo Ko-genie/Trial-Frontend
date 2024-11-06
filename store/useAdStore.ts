@@ -6,6 +6,7 @@ interface AdData {
   productName: string;
   productDescription: string;
   adCopy: string;
+  images?: string[]; // Optional property for scraped images
 }
 
 interface AdState {
