@@ -72,65 +72,21 @@ const CreateAdPage: React.FC = () => {
     }
   };
 
-  const labelStyle: CSSProperties = {
-    display: "block",
-    fontSize: "16px",
-    color: "#DB4A2B",
-    marginBottom: "8px",
-    fontWeight: "600",
-  };
-
-  const inputStyle: CSSProperties = {
-    border: "2px solid #CBD5E1",
-    padding: "12px",
-    width: "100%",
+  const buttonStyle: CSSProperties = {
+    cursor: "pointer",
+    padding: "10px 20px",
+    width: "48%",
+    height: "40px",
+    background: "#DB4A2B",
+    boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.1)",
+    color: "#fff",
     borderRadius: "8px",
-    marginBottom: "12px",
-    backgroundColor: "#F8FAFC",
-    fontSize: "16px",
-    color: "#334155",
-    boxShadow: "0 2px 10px rgba(0, 0, 0, 0.1)",
-    transition: "border-color 0.2s ease",
-  };
-
-  // Smaller textarea for Product Description
-  const productDescriptionStyle: CSSProperties = {
-    ...inputStyle,
-    minHeight: "100px",
-    resize: "vertical",
-    textAlign: "left",
-  };
-
-  // Larger textarea for Ad Copy
-  const adCopyStyle: CSSProperties = {
-    ...inputStyle,
-    minHeight: "300px",
-    padding: "16px",
-    fontSize: "18px",
-    resize: "vertical",
-  };
-
-  const containerStyle: CSSProperties = {
-    borderRadius: "16px",
-    padding: "30px",
-    backgroundColor: "#FFFFFF",
-    boxShadow: "0 6px 30px rgba(0, 0, 0, 0.12)",
-    fontFamily: "'Inter', sans-serif",
-    border: "1px solid rgba(0, 0, 0, 0.05)",
-    width: "50%",
-    transition: "box-shadow 0.3s ease, transform 0.3s ease",
-    position: "relative",
-    minHeight: "400px",
-  };
-
-  const hoverEffect = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    e.currentTarget.style.boxShadow = "0 10px 40px rgba(0, 0, 0, 0.15)";
-    e.currentTarget.style.transform = "translateY(-5px)";
-  };
-
-  const resetHoverEffect = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    e.currentTarget.style.boxShadow = "0 6px 30px rgba(0, 0, 0, 0.12)";
-    e.currentTarget.style.transform = "translateY(0)";
+    fontWeight: "600",
+    textAlign: "center",
+    marginBottom: "10px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
   };
 
   return (
@@ -144,50 +100,111 @@ const CreateAdPage: React.FC = () => {
     >
       {/* Form Section */}
       <div
-        style={containerStyle}
-        onMouseOver={hoverEffect}
-        onMouseOut={resetHoverEffect}
+        style={{
+          borderRadius: "16px",
+          padding: "30px",
+          backgroundColor: "#FFFFFF",
+          boxShadow: "0 6px 30px rgba(0, 0, 0, 0.12)",
+          fontFamily: "'Inter', sans-serif",
+          border: "1px solid rgba(0, 0, 0, 0.05)",
+          width: "50%",
+          transition: "box-shadow 0.3s ease, transform 0.3s ease",
+          position: "relative",
+          minHeight: "400px",
+        }}
       >
         <div style={{ marginBottom: "20px" }}>
-          <label style={labelStyle}>Brand Name:</label>
+          <label style={{ display: "block", fontSize: "16px", color: "#DB4A2B", marginBottom: "8px", fontWeight: "600" }}>
+            Brand Name:
+          </label>
           <input
             type="text"
             name="brandName"
             placeholder="Enter your brand name"
             value={adData.brandName || ""}
             onChange={handleInputChange}
-            style={inputStyle}
+            style={{
+              border: "2px solid #CBD5E1",
+              padding: "12px",
+              width: "100%",
+              borderRadius: "8px",
+              marginBottom: "12px",
+              backgroundColor: "#F8FAFC",
+              fontSize: "16px",
+              color: "#334155",
+              boxShadow: "0 2px 10px rgba(0, 0, 0, 0.1)",
+            }}
           />
         </div>
         <div style={{ marginBottom: "20px" }}>
-          <label style={labelStyle}>Product Name:</label>
+          <label style={{ display: "block", fontSize: "16px", color: "#DB4A2B", marginBottom: "8px", fontWeight: "600" }}>
+            Product Name:
+          </label>
           <input
             type="text"
             name="productName"
             placeholder="Enter your product name"
             value={adData.productName || ""}
             onChange={handleInputChange}
-            style={inputStyle}
+            style={{
+              border: "2px solid #CBD5E1",
+              padding: "12px",
+              width: "100%",
+              borderRadius: "8px",
+              marginBottom: "12px",
+              backgroundColor: "#F8FAFC",
+              fontSize: "16px",
+              color: "#334155",
+              boxShadow: "0 2px 10px rgba(0, 0, 0, 0.1)",
+            }}
           />
         </div>
         <div style={{ marginBottom: "20px" }}>
-          <label style={labelStyle}>Product Description:</label>
+          <label style={{ display: "block", fontSize: "16px", color: "#DB4A2B", marginBottom: "8px", fontWeight: "600" }}>
+            Product Description:
+          </label>
           <textarea
             name="productDescription"
-            value={adData.productDescription || ""}
             placeholder="Describe your product..."
+            value={adData.productDescription || ""}
             onChange={handleInputChange}
-            style={productDescriptionStyle}
+            style={{
+              border: "2px solid #CBD5E1",
+              padding: "12px",
+              width: "100%",
+              borderRadius: "8px",
+              marginBottom: "12px",
+              backgroundColor: "#F8FAFC",
+              fontSize: "16px",
+              color: "#334155",
+              boxShadow: "0 2px 10px rgba(0, 0, 0, 0.1)",
+              minHeight: "100px",
+              resize: "vertical",
+            }}
           />
         </div>
         <div style={{ marginBottom: "20px" }}>
-          <label style={labelStyle}>Ad Copy:</label>
+          <label style={{ display: "block", fontSize: "16px", color: "#DB4A2B", marginBottom: "8px", fontWeight: "600" }}>
+            Ad Copy:
+          </label>
           <textarea
             name="adCopy"
-            value={adData.adCopy || ""}
             placeholder="Edit your ad copy..."
+            value={adData.adCopy || ""}
             onChange={handleInputChange}
-            style={adCopyStyle}
+            style={{
+              border: "2px solid #CBD5E1",
+              padding: "12px",
+              width: "100%",
+              borderRadius: "8px",
+              marginBottom: "12px",
+              backgroundColor: "#F8FAFC",
+              fontSize: "16px",
+              color: "#334155",
+              boxShadow: "0 2px 10px rgba(0, 0, 0, 0.1)",
+              minHeight: "200px", // Increased height
+              resize: "vertical",
+            }}
           />
         </div>
       </div>
@@ -195,82 +212,81 @@ const CreateAdPage: React.FC = () => {
       {/* Image Upload and Gallery Container */}
       <div
         style={{
-          ...containerStyle,
+          borderRadius: "16px",
+          padding: "30px",
+          backgroundColor: "#FFFFFF",
+          boxShadow: "0 6px 30px rgba(0, 0, 0, 0.12)",
+          fontFamily: "'Inter', sans-serif",
+          border: "1px solid rgba(0, 0, 0, 0.05)",
+          width: "50%",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
         }}
-        onMouseOver={hoverEffect}
-        onMouseOut={resetHoverEffect}
       >
         <p style={{ fontSize: "14px", color: "#6b7280", marginBottom: "10px" }}>
-          Tip: For the best Instagram preview, use an image with a 16:9 aspect
-          ratio
+          Tip: For the best Instagram preview, use an image with a 16:9 aspect ratio
         </p>
-        <label
-          htmlFor="file-upload"
-          className="custom-file-upload"
-          style={{
-            cursor: "pointer",
-            padding: "10px 20px",
-            background: "#DB4A2B",
-            boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.1)",
-            color: "#fff",
-            borderRadius: "8px",
-            fontWeight: "600",
-            marginBottom: "10px",
-          }}
-        >
-          Upload Image
-        </label>
-        <input
-          id="file-upload"
-          type="file"
-          accept="image/*"
-          onChange={handleImageUpload}
-          style={{ display: "none" }}
-        />
 
-        <Button
-          className="bg-[#DB4A2B] hover:bg-[#DB4A2B]/90"
-          onClick={() => setShowGallery(true)}
-          style={{ margin: "15px 0" }}
-        >
-          Choose Image From Website
-        </Button>
+        <div style={{ display: "flex", gap: "4%", width: "100%", justifyContent: "center" }}>
+          <label htmlFor="file-upload" style={buttonStyle}>
+            Upload Image
+          </label>
+          <input
+            id="file-upload"
+            type="file"
+            accept="image/*"
+            onChange={handleImageUpload}
+            style={{ display: "none" }}
+          />
 
-        <h1
-          style={{ marginBottom: "1px", fontSize: "20px", fontWeight: "600" }}
-        >
+          <Button onClick={() => setShowGallery(true)} style={buttonStyle}>
+            Images from URL
+          </Button>
+        </div>
+
+        <h1 style={{ marginBottom: "1px", fontSize: "20px", fontWeight: "600" }}>
           Instagram Post Preview
         </h1>
 
         {/* Gallery Modal */}
         {showGallery && (
-          <div style={{
-            position: "fixed",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "100%",
-            backgroundColor: "rgba(0, 0, 0, 0.5)",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}>
-            <div style={{
-              background: "#FFF",
-              padding: "20px",
-              borderRadius: "12px",
-              maxWidth: "500px",
+          <div
+            style={{
+              position: "fixed",
+              top: 0,
+              left: 0,
               width: "100%",
-              textAlign: "center",
-              overflowY: "auto",
-              maxHeight: "80vh",
-            }}>
+              height: "100%",
+              backgroundColor: "rgba(0, 0, 0, 0.5)",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <div
+              style={{
+                background: "#FFF",
+                padding: "20px",
+                borderRadius: "12px",
+                maxWidth: "500px",
+                width: "100%",
+                textAlign: "center",
+                overflowY: "auto",
+                maxHeight: "80vh",
+              }}
+            >
               <h3>Select an Image</h3>
-              <div style={{ display: "flex", flexWrap: "wrap", gap: "10px", justifyContent: "center", marginTop: "15px" }}>
+              <div
+                style={{
+                  display: "flex",
+                  flexWrap: "wrap",
+                  gap: "10px",
+                  justifyContent: "center",
+                  marginTop: "15px",
+                }}
+              >
                 {adData.images?.map((imgSrc, idx) => (
                   <img
                     key={idx}
@@ -292,78 +308,60 @@ const CreateAdPage: React.FC = () => {
                   />
                 ))}
               </div>
-              <button onClick={() => setShowGallery(false)} style={{ marginTop: "20px", padding: "10px 20px", background: "#DB4A2B", color: "#FFF", borderRadius: "8px", fontWeight: "600", cursor: "pointer" }}>Close</button>
+              <button onClick={() => setShowGallery(false)} style={buttonStyle}>
+                Close
+              </button>
             </div>
           </div>
         )}
 
         {/* Selected Image Preview */}
         {selectedImage && (
-          <div style={{ marginTop: "30px", textAlign: "center", border: "2px solid #4f46e5", borderRadius: "12px", overflow: "hidden", width: "100%", marginBottom: "70px" }}>
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "10px", borderBottom: "1px solid #e5e7eb" }}>
-              
-              <Image 
-                src="/insta-logo.jpg" 
-                alt="Profile" 
-                width={40} 
-                height={40} 
-                style={{ borderRadius: "50%" }} 
-              />
-
-              <span 
-              style={{ fontWeight: "bold" }}>{adData.brandName}
-              </span>
-
-              <span>
-                •••
-                </span>
-
+          <div
+            style={{
+              marginTop: "30px",
+              textAlign: "center",
+              border: "2px solid #4f46e5",
+              borderRadius: "12px",
+              overflow: "hidden",
+              width: "100%",
+              marginBottom: "70px",
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                padding: "10px",
+                borderBottom: "1px solid #e5e7eb",
+              }}
+            >
+              <Image src="/insta-logo.jpg" alt="Profile" width={40} height={40} style={{ borderRadius: "50%" }} />
+              <span style={{ fontWeight: "bold" }}>{adData.brandName}</span>
+              <span>•••</span>
             </div>
 
-            {/* Selected Image - Proportional Scaling */}
-            
-            <img 
-            src={selectedImage} 
-            alt="Selected" 
-            style={{ 
-              width: "50%", 
-              height: "50%", 
-              borderRadius: "12px",
-              maxHeight: "400px",
-              display: "block",         // Center the image as a block-level element
-              margin: "0 auto",         // Horizontal centering
-            }} 
-          />
-
+            <img
+              src={selectedImage}
+              alt="Selected"
+              style={{
+                width: "100%",
+                height: "auto",
+                maxHeight: "400px",
+                display: "block",
+                margin: "0 auto",
+              }}
+            />
 
             <div className="post-footer" style={{ padding: "10px" }}>
-              <div
-                className="icons"
-                style={{ display: "flex", justifyContent: "space-between" }}
-              >
-                <FontAwesomeIcon
-                  icon={faHeart}
-                  className="icon heart-icon"
-                  style={{ color: "red" }}
-                />
-                <FontAwesomeIcon
-                  icon={faComment}
-                  className="icon black-icon"
-                  style={{ color: "black" }}
-                />
-                <FontAwesomeIcon
-                  icon={faPaperPlane}
-                  className="icon black-icon"
-                  style={{ color: "black" }}
-                />
-                <FontAwesomeIcon
-                  icon={faBookmark}
-                  className="icon black-icon save"
-                  style={{ color: "black" }}
-                />
+              <div className="icons" style={{ display: "flex", justifyContent: "space-between" }}>
+                <FontAwesomeIcon icon={faHeart} style={{ color: "red" }} />
+                <FontAwesomeIcon icon={faComment} style={{ color: "black" }} />
+                <FontAwesomeIcon icon={faPaperPlane} style={{ color: "black" }} />
+                <FontAwesomeIcon icon={faBookmark} style={{ color: "black" }} />
               </div>
               <span
-                className="likes-count"
                 style={{
                   fontWeight: "bold",
                   marginTop: "8px",
@@ -374,36 +372,19 @@ const CreateAdPage: React.FC = () => {
                 100 likes
               </span>
 
-              <div className="description" style={{ marginTop: "8px", textAlign: "left" }}>
-                <span className="username" style={{ fontWeight: "bold" }}>
-                {adData.brandName}
-                </span>{" "}
-                {adData.adCopy}
+              <div style={{ marginTop: "8px", textAlign: "left" }}>
+                <span style={{ fontWeight: "bold" }}>{adData.brandName}</span> {adData.adCopy}
               </div>
 
-              <div
-                className="time-posted"
-                style={{ marginTop: "8px", color: "#6b7280" }}
-              >
-                2 hours ago
-              </div>
+              <div style={{ marginTop: "8px", color: "#6b7280" }}>2 hours ago</div>
             </div>
           </div>
         )}
 
         {selectedImage && (
-          <Button 
-            onClick={handleDownload} 
-            style={{ 
-              marginTop: "10px", 
-              padding: "10px 20px", 
-              background: "#DB4A2B", 
-              color: "#fff", 
-              borderRadius: "8px", 
-              cursor: "pointer" }}
-            >
-              Download Image
-            </Button>
+          <Button onClick={handleDownload} style={buttonStyle}>
+            Download Image
+          </Button>
         )}
       </div>
     </div>
