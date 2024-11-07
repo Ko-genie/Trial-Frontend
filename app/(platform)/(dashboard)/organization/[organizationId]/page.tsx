@@ -64,6 +64,10 @@ const OrganizationIdPage = () => {
     }
   };
 
+  const handleSkip = () => {
+    router.push(`/organization/${organizationId}/manualEntry`);
+  };
+
   const containerStyle: CSSProperties = {
     textAlign: "center",
     padding: "20px",
@@ -105,13 +109,24 @@ const OrganizationIdPage = () => {
     margin: "0 auto",
   };
 
+  const buttonContainerStyle: CSSProperties = {
+    display: "flex",
+    justifyContent: "center",
+    gap: "10px",
+    marginTop: "10px",
+  };
+
   const buttonStyle: CSSProperties = {
     padding: "8px 20px",
     background: "#DB4A2B",
     color: "white",
-    marginTop: "10px",
     boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.1)",
     transition: "all 0.3s ease",
+  };
+
+  const skipButtonStyle: CSSProperties = {
+    ...buttonStyle,
+    background: "#808080",
   };
 
   return (
@@ -147,9 +162,14 @@ const OrganizationIdPage = () => {
           </select>
         </div>
 
-        <Button disabled={loading} style={buttonStyle}>
-          {loading ? "Generating Ad..." : "Generate Ad"}
-        </Button>
+        <div style={buttonContainerStyle}>
+          <Button disabled={loading} style={buttonStyle}>
+            {loading ? "Generating Ad..." : "Generate Ad"}
+          </Button>
+          <Button onClick={handleSkip} style={buttonStyle}>
+            Skip and Enter Data Manually
+          </Button>
+        </div>
       </form>
 
       {loading && (
